@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>plugins</title>
+</head>
+	<style type="text/css">
+		textarea{width:700px;height: 150px}
+	</style>
+<body>
+<h1>Plugins</h1>
+<p>Плагины являются основой webpack. Сама webpack построена на той же плагиновой системе, которую вы используете в своей конфигурации webpack!</p>
+<p>Они также служат целям делать что-то еще, что не может сделать загрузчик.</p>
+<p><h3>Anatomy</h3></p>
+<p>Плагин webpack - это объект JavaScript, который имеет свойство apply. Это свойство apply вызывается компилятором webpack, предоставляя доступ ко всему жизненному циклу компиляции.</p>
+<p>ConsoleLogOnBuildWebpackPlugin.js</p>
+<p><textarea>function ConsoleLogOnBuildWebpackPlugin() {
+
+};
+
+ConsoleLogOnBuildWebpackPlugin.prototype.apply = function(compiler) {
+  compiler.plugin('run', function(compiler, callback) {
+    console.log("The webpack build process is starting!!!");
+
+    callback();
+  });
+};
+</textarea></p>
+<p>Умный разработчик JavaScript, вы можете запомнить метод Function.prototype.apply.Из-за этого метода вы можете передать любую функцию как плагин (это укажет на компилятор). Вы можете использовать этот стиль для встраивания пользовательских плагинов в вашу конфигурацию.</p>
+<p><h3>Usage</h3></p>
+<p>Поскольку плагины могут принимать аргументы / параметры, вы должны передать новый экземпляр свойству plugins в свою конфигурацию webpack. В зависимости от того, как вы используете webpack, существует несколько способов использования плагинов.</p>
+<p><h3>Configuration</h3></p>
+<p>webpack.config.js</p>
+<p><textarea>const HtmlWebpackPlugin = require('html-webpack-plugin'); //installed via npm
+const webpack = require('webpack'); //to access built-in plugins
+const path = require('path');
+
+const config = {
+  entry: './path/to/my/entry/file.js',
+  output: {
+    filename: 'my-first-webpack.bundle.js',
+    path: path.resolve(__dirname, 'dist')
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        loader: 'babel-loader'
+      }
+    ]
+  },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin(),
+    new HtmlWebpackPlugin({template: './src/index.html'})
+  ]
+};
+
+module.exports = config;
+</textarea></p>
+<p><h1>Node API</h1></p>
+<p>Даже при использовании API-интерфейса Node пользователи должны передавать плагины через свойство plugins в конфигурации. Использование compiler.apply не должно быть рекомендованным способом.</p>
+<p>some-node-script.js</p>
+<p><textarea>  const webpack = require('webpack'); //to access webpack runtime
+  const configuration = require('./webpack.config.js');
+
+  let compiler = webpack(configuration);
+  compiler.apply(new webpack.ProgressPlugin());
+
+  compiler.run(function(err, stats) {
+    // ...
+  });
+</textarea></p>
+<p>Знаете ли вы: пример, рассмотренный выше, очень похож на сам runpack webpack! В исходном коде webpack есть множество примеров использования, которые вы можете применить к своим собственным конфигурациям и скриптам!</p>
+</body>
+</html>

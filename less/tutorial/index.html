@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tutorial Webpack</title>
+	<style type="text/css">
+		textarea{width:700px;height: 150px}
+	</style>
+</head>
+<body>
+
+<h1>Начнем!</h1>
+<div>
+	<p>Webpack это инструмент для создания JavaScript модулей в вашем приложении. Начать использование webpack c его cli или api возможно сразу после <a href="">инсталяции</a>. Webpack упрощает процесс разработки благодаря быстрому строительству зависимостей в приложении и группированию их в нужном порядке. Webpack можно нстроить для кастомизации оптимизации вашего кода, для разделения кода на продакшене, запуска сервера разработчика что позволяет горячему обновлению кода без перзагрузки страницы и много других класных вещей. </p>
+	<p><h3>Создание связки</h3></p>
+	<p>Создайте демо проект для webpack. <a href="">Установите Webpack</a>.</p>
+	<p>npm install --save dev webpack<br>
+		./node_modules/.bin/webpack --help<br>
+		webpack --help
+		</p>
+	<p>Теперь создайте подкаталог app с файлом index.js</p>
+	<p>app/index.js</p>
+	<p><textarea>function component () {
+  var element = document.createElement('div');
+
+  /* lodash is required for the next line to work */
+  element.innerHTML = _.join(['Hello','webpack'], ' ');
+
+  return element;
+}
+document.body.appendChild(component());
+</textarea>
+
+</p>
+	<p>Что бы запустить это код создадим страничку index.html в корне проекта и подключим к ней наш app.js </p>
+	<p><textarea><html>
+  <head>
+    <title>webpack 2 demo</title>
+    <script src="https://unpkg.com/lodash@4.16.6"></script>
+  </head>
+  <body>
+    <script src="app/index.js"></script>
+  </body>
+</html>
+</textarea></p>
+	<p>Здесь видно неявную зависмость между тегами script</p>
+	<p>index.js неявно зависит от lodash, и нигде в index.js не описано что он нуждается в lodash, а просто предполагает что существует глобальная переменная _ . </p>
+	<p><ul>И это может стать проблемой в случаях:
+	<li>если зависимости не указаны или подключены в неправильном порядке</li>
+	<li>если зависмости включены но не используются, тогда браузер загружает ненужный код</li>
+	</ul></p>
+	<p>Что бы поставить lodash в зависимость к index.js для начала установим его</p>
+	<p>npm install --save lodash</p>
+	<p>и импортируем его в index.js</p>
+	<p><textarea>import _ from 'lodash';
+	function component(){...}</textarea></p>
+	<p>Мы также подключим к нашей страничке index.html скрипт генерируемый webpack</p>
+	<p><textarea> <html>
+   <head>
+     <title>webpack 2 demo</title>
+-    <script src="https://unpkg.com/lodash@4.16.6"></script>
+   </head>
+   <body>
+-    <script src="app/index.js"></script>
++    <script src="dist/bundle.js"></script>
+   </body>
+ </html>
+</textarea></p>
+	<p>Сейчас index.js явно включает Lodash и связывает его как _ без загрязнения глобальной области</p>
+	<p>Webpack по объявлениям зависимостей модуля может строить графы зависимостей. и скрипты будут подгружаться когда это нужно в соответствии этим графам. также не использованные зависмотси не будут включаться в связывание.</p>
+	<p>Теперь запустим в командной строке наш webpack с входящим файлом index.js а bundle.js как генерируемый webpack в котором весь наш код необходимый для нашей страницы index.html </p>
+	<p><textarea>./node_modules/.bin/webpack ../../app/index.js ../../dist/bundle.js
+
+Hash: ff6c1d39b26f89b3b7bb
+Version: webpack 2.2.0
+Time: 385ms
+    Asset    Size  Chunks                    Chunk Names
+bundle.js  544 kB       0  [emitted]  [big]  main
+   [0] ./~/lodash/lodash.js 540 kB {0} [built]
+   [1] (webpack)/buildin/global.js 509 bytes {0} [built]
+   [2] (webpack)/buildin/module.js 517 bytes {0} [built]
+   [3] ./app/index.js 278 bytes {0} [built]</textarea></p>
+	<p>Откроем наш index.html в браузере и увидим результат</p>
+	<p><h3>Модули ES2015 и webpack</h3></p>
+	<p>Заметили использования модуля импорта ES2015 в index.js? Хотя обхявления import/export не поддерживаются браузерами пока, webpack заменит их совместимым с ES5 кодом.</p>
+	<p>Обратите внимание что webpack не будет трогать ваш код, кроме import/export. Если вы используете другие фишки ES6 обязательно воспользуйтесь транспайлером Babel.</p>
+	<p><h3>Webpack config</h3></p>
+	<p>Для детальной конфигурации webpack можно создать файл webpack.config.js. Вы можете представить CLI команды выше в таком виде</p>
+	<p><template>var path = require('path');
+
+module.exports = {
+  entry: '../../app/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist')
+  }
+};
+</template></p>
+	<p>Файл настроек очень удобно! Мы можем добавить правила загрузки, плагины, опции разрешения и много разные улучшения для нашего связывания. </p>
+	<p><h3>Webpack и npm</h3></p>
+	<p>Вы заметили как не удобно связывать через командную строку CLI наш проект, а именно заходить в локальный каталог webpack и оттуда производить команды. Поэтому проще завести команду в package.json</p>
+	<p><textarea>{
+  ...
+  "scripts": {
+    "build": "webpack"
+  },
+  ...
+}
+</textarea></p>
+	<p>И можем собирать проект только командой npm run build</p>
+	<p>npm подхватывает скрипты и временно исполняется в среде, содержит команду bin.</p>
+	<p>Можно также через дефисы добавлять пользовательские параметры к этой команде</p>
+	<p></p>
+	<p></p>
+	<p></p>
+</div>
+
+
+</body>
+</html>

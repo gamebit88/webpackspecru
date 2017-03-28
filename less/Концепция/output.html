@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Output</title>
+	<style type="text/css">
+		textarea{width:700px;height: 150px}
+	</style>
+</head>
+<body>
+<h1>Output</h1>
+<p>Параметры, влияющие на вывод компиляции. Параметры вывода сообщают webpack, как записать скомпилированные файлы на диск. Обратите внимание, что хотя может быть несколько точек входа, указывается только одна конфигурация вывода.</p>
+<p>Если вы используете любое хэширование ([хеш] или [чунхаш]), убедитесь, что у вас последовательный порядок модулей. Используйте OccurrenceOrderPlugin или recordsPath.</p>
+<p><h3>Usage</h3></p>
+<p>Минимальные требования к свойству вывода в вашей конфигурации webpack - установить его значение для объекта, включая следующие две вещи:</p>
+<p>Предпочтительное имя файла скомпилированного файла:</p>
+<p>// main.js || bundle.js || index.js</p>
+<p>Путь к output.path - это абсолютный путь к тому, с каким каталогом вы хотите его включить.</p>
+<p>webpack.config.js</p>
+<p><textarea>const config = {
+  output: {
+    filename: 'bundle.js',
+    path: '/home/proj/public/assets'
+  }
+};
+
+module.exports = config;
+</textarea></p>
+<p><h3>Options</h3></p>
+<p>Ниже приведен список значений, которые вы можете передать свойству output.</p>
+<p><h3>output.chunkFilename</h3></p>
+<p></p>
+<p></p>
+<p><h3>output.chunkFilename</h3></p>
+<p>Имя файла для фрагментов без записи как относительный путь в каталоге output.path.</p>
+<p>[Id] заменяется идентификатором фрагмента.</p>
+<p>[Имя] заменяется именем блока (или идентификатором, когда у блока нет имени).</p>
+<p>[Хеш] заменяется хешем компиляции.</p>
+<p>[Chunkhash] заменяется хешем фрагмента.</p>
+<p><h3>output.crossOriginLoading</h3></p>
+<p>Эта опция позволяет загружать куски в разных местах.</p>
+<p>Возможные значения:</p>
+<p>ложь - Disable Cross-Origin загрузки.</p>
+<p>«Анонимный» - включена загрузка со всех сторон. При использовании anonymous no учетные данные будут отправляться вместе с запросом.</p>
+<p>«Use-credentials» - включена перегрузка по происхождению, и учетные данные будут отправляться вместе с запросом.</p>
+<p>Для получения дополнительной информации о загрузке кросс-происхождения см. MDN</p>
+<p>Default: false
+
+see also library
+
+see also Development Tools</p>
+<p><h3>output.devtoolLineToLine</h3></p>
+<p>Включить линейно-отображаемый режим для всех / указанных модулей. Режим отображения «линия-строка» использует простой SourceMap, где каждая строка сгенерированного источника отображается на одну и ту же строку исходного источника.Это оптимизация производительности. Используйте его только в том случае, если ваша производительность должна быть лучше, и вы уверены, что строки ввода соответствуют сгенерированным линиям.</p>
+<p>True разрешает его для всех модулей (не рекомендуется)</p>
+<p>Объект {test, include, exclude}, подобный module.loaders, позволяет его для определенных файлов.</p>
+<p>Default: false</p>
+<p><h3>output.filename</h3></p>
+<p>Задает имя каждого выходного файла на диске. Вы не должны указывать здесь абсолютный путь! Параметр output.path определяет местоположение на диске, в которое записываются файлы. Filename используется только для присвоения имен отдельным файлам.</p>
+<p>single entry</p>
+<p><textarea>{
+  entry: './src/app.js',
+  output: {
+    filename: 'bundle.js',
+    path: __dirname + '/build'
+  }
+}
+
+// writes to disk: ./build/bundle.js
+</textarea></p>
+<p>multiple entries</p>
+<p>Если ваша конфигурация создает более одного фрагмента (например, с несколькими точками входа или при использовании плагинов, таких как CommonsChunkPlugin), вы должны использовать подстановки, чтобы каждый файл имел уникальное имя.</p>
+<p>[name] is replaced by the name of the chunk.</p>
+<p>[hash] is replaced by the hash of the compilation.</p>
+<p>[chunkhash] is replaced by the hash of the chunk.</p>
+<p><textarea>{
+  entry: {
+    app: './src/app.js',
+    search: './src/search.js'
+  },
+  output: {
+    filename: '[name].js',
+    path: __dirname + '/build'
+  }
+}
+
+// writes to disk: ./build/app.js, ./build/search.js
+</textarea></p>
+<p><h3>output.hotUpdateChunkFilename</h3></p>
+<p>Имя файла для горячих обновлений. Они находятся внутри каталога output.path.</p>
+<p>[id] is replaced by the id of the chunk.</p>
+<p>[hash] is replaced by the hash of the compilation. (The last hash stored in the records)</p>
+<p>Default: "[id].[hash].hot-update.js"</p>
+<p><h3>output.hotUpdateFunction</h3></p>
+<p>Функция JSONP, используемая webpack для асинхронной загрузки горячих кусков обновления.</p>
+<p>Default: "webpackHotUpdate"</p>
+<p><h3>output.hotUpdateMainFilename</h3></p>
+<p>Имя файла основного файла горячего обновления. Он находится внутри каталога output.path.</p>
+<p>[hash] is replaced by the hash of the compilation. (The last hash stored in the records)</p>
+<p>Default: "[hash].hot-update.json"</p>
+<p><h3>output.jsonpFunction</h3></p>
+<p>Функция JSONP, используемая webpack для асинхронной загрузки блоков. Более короткая функция может немного уменьшить размер файла. Используйте другой идентификатор при наличии нескольких экземпляров webpack на одной странице.</p>
+<p>Default: "webpackJsonp"</p>
+<p><h3>output.library</h3></p>
+<p>Если установлено, экспортируйте пакет как библиотеку. Output.library - это имя. Используйте это, если вы пишете библиотеку и хотите опубликовать ее как отдельный файл.</p>
+<p><h3>output.libraryTarget</h3></p>
+<p>Какой формат экспортировать библиотеку:</p>
+<p>"Var" - Экспорт путем установки переменной: var Library = xxx (по умолчанию)</p>
+<p>"This" - Export, установив свойство this: this ["Библиотека"] = xxx</p>
+<p>"Commonjs" - Экспорт путем установки свойства экспорта: exports ["Библиотека"] = xxx</p>
+<p>"commonjs2" - Export by setting module.exports: module.exports = xxx</p>
+<p>«Amd» - Экспорт в AMD (опционально - установка имени через библиотечную опцию)</p>
+<p>«Umd» - экспорт в AMD, CommonJS2 или как свойство в корневой папке</p>
+<p>Default: "var"</p>
+<p>Если output.library не установлен, но для output.libraryTarget установлено значение, отличное от var, каждое свойство экспортируемого объекта копируется (кроме amd, commonjs2 и umd).</p>
+<p><h3>output.path</h3></p>
+<p>Выходной каталог как абсолютный путь (обязательно). [Хеш] заменяется хешем компиляции.</p>
+<p>config.js</p>
+<p><textarea>output: {
+    path: "/home/proj/public/assets",
+    publicPath: "/assets/"
+}
+</textarea></p>
+<p>ndex.html</p>
+<p><textarea><head>
+  <link href="/assets/spinner.gif"/>
+</head>
+</textarea></p>
+<p>И более сложный пример использования CDN и хешей для активов.</p>
+<p>config.js</p>
+<p><textarea>output: {
+    path: "/home/proj/cdn/assets/[hash]",
+    publicPath: "http://cdn.example.com/assets/[hash]/"
+}
+</textarea></p>
+<p>Примечание. В случаях, когда конечный publicPath выходных файлов неизвестен во время компиляции, его можно оставить пустым и динамически устанавливать во время выполнения в файле точки входа.Если вы не знаете publicPath во время компиляции, вы можете опустить его и установить __webpack_public_path__ в вашей точке входа.</p>
+<p><textarea> __webpack_public_path__ = myRuntimePublicPath
+
+// rest of your application entry
+</textarea></p>
+<p><h3>output.sourceMapFilename</h3></p>
+<p>Имя файла SourceMaps для файлов JavaScript. Они находятся внутри каталога output.path.</p>
+<p>[Файл] заменяется именем файла JavaScript.</p>
+<p>[Id] заменяется идентификатором фрагмента.</p>
+<p>[Хеш] заменяется хешем компиляции.</p>
+<p>Default: "[file].map"</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+</body>
+</html>

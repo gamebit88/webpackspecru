@@ -1,0 +1,21 @@
+{
+  "name": "tutorial",
+  "version": "1.0.0",
+  "description": "webpack tutorial",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "keywords": [
+    "tutorial",
+    "webpack"
+  ],
+  "author": "gamebit88",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "webpack": "^2.3.2"
+  }
+}
